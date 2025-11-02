@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rural Clinic Patient Record System - SDG 3</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <i class="fas fa-hospital-alt logo"></i>
+                <h1>Rural Clinic Patient Record System</h1>
+                <div class="sdg-badge">
+                    <span>SDG 3: Good Health & Well-being</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Add Patient Form -->
+            <section class="form-section">
+                <h2><i class="fas fa-user-plus"></i> Add New Patient</h2>
+                <form id="patientForm" class="patient-form">
+                    <div class="form-group">
+                        <label for="name">Full Name:</label>
+                        <input type="text" id="name" name="name" required placeholder="Enter patient's full name">
+                    </div>
+                    <div class="form-group">
+                        <label for="age">Age:</label>
+                        <input type="number" id="age" name="age" min="0" max="120" required placeholder="Enter age">
+                    </div>
+                    <div class="form-group">
+                        <label for="disease">Disease/Condition:</label>
+                        <input type="text" id="disease" name="disease" required placeholder="Enter disease or condition">
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Add Patient
+                    </button>
+                </form>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <button id="exportBtn" class="btn btn-secondary">
+                        <i class="fas fa-download"></i> Export Data
+                    </button>
+                    <button id="importBtn" class="btn btn-secondary">
+                        <i class="fas fa-upload"></i> Import Data
+                    </button>
+                    <button id="clearBtn" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Clear All
+                    </button>
+                </div>
+            </section>
+
+            <!-- Patient Records -->
+            <section class="records-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-list"></i> Patient Records</h2>
+                    <button id="refreshBtn" class="btn btn-secondary">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+                
+                <!-- Statistics -->
+                <div class="stats">
+                    <div class="stat-card">
+                        <i class="fas fa-users"></i>
+                        <span id="totalPatients">0</span>
+                        <small>Total Patients</small>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-chart-line"></i>
+                        <span id="averageAge">0</span>
+                        <small>Average Age</small>
+                    </div>
+                </div>
+
+                <!-- Search and Filter -->
+                <div class="search-section">
+                    <input type="text" id="searchInput" placeholder="Search patients by name or disease..." class="search-input">
+                    <button id="clearSearch" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Clear
+                    </button>
+                </div>
+
+                <!-- Patient Table -->
+                <div class="table-container">
+                    <table id="patientsTable" class="patients-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Age</th>
+                                <th>Disease</th>
+                                <th>Date Added</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="patientsTableBody">
+                            <!-- Patient records will be inserted here -->
+                        </tbody>
+                    </table>
+                    <div id="noPatients" class="no-patients">
+                        <i class="fas fa-clipboard-list"></i>
+                        <p>No patient records found. Add your first patient above.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2024 Rural Clinic Patient Record System. Supporting Sustainable Development Goal 3: Good Health and Well-being.</p>
+            <p class="storage-info">Data is stored locally in your browser.</p>
+        </footer>
+    </div>
+
+    <!-- Edit Patient Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-edit"></i> Edit Patient</h3>
+                <span class="close">&times;</span>
+            </div>
+            <form id="editForm" class="patient-form">
+                <input type="hidden" id="editId">
+                <div class="form-group">
+                    <label for="editName">Full Name:</label>
+                    <input type="text" id="editName" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="editAge">Age:</label>
+                    <input type="number" id="editAge" name="age" min="0" max="120" required>
+                </div>
+                <div class="form-group">
+                    <label for="editDisease">Disease/Condition:</label>
+                    <input type="text" id="editDisease" name="disease" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelEdit">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Patient</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Import Modal -->
+    <div id="importModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-upload"></i> Import Patient Data</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>Paste your exported patient data (JSON format):</p>
+                <textarea id="importData" rows="10" placeholder='Paste JSON data here...'></textarea>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelImport">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="confirmImport">Import Data</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
